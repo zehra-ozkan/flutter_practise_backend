@@ -12,18 +12,22 @@ import java.util.List;
 @RequestMapping("/app_users")
 @RestController
 public class UserResource {
-    UserService userService;
-    UserRepository userRepository;
-    PasswordEncoder passwordEncoder;
+    private final UserService userService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    //managing resting points
+    public UserResource(UserService userService, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userService = userService;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+
 
     public record LoginRequest(String username, String password) {}
 
-    //managing resting points
-    public UserResource(UserService userService) {
-        this.userService = userService;
-    }
 
-    @PostMapping("/app_users/login")
+    @PostMapping("/login")
     public ResponseEntity<String> login(
             @RequestBody LoginRequest request,
             HttpSession session) { // Add this parameter
@@ -38,34 +42,34 @@ public class UserResource {
         return ResponseEntity.status(401).body("Invalid credentials");
     }
 
-    @PostMapping(value="/app_users/register")
+    @PostMapping(value="/register")
     public ResponseEntity<User> add(@RequestBody User user){ //to remember loggen-in state
         User s = this.userService.add(user);
         return ResponseEntity.ok(s);
     }
 
 
-    @GetMapping(value="/app_users")
+    @GetMapping()
     public List<User> getAll(){
         return this.userService.getAll();
     }
 
-    @GetMapping(value="/app_users/id/{id}")
+    @GetMapping(value="/id/{id}")
     public User getById(@PathVariable int id){
         return this.userService.getById(id);
     }
-    @GetMapping(value="/app_users/name/{name}")
+    @GetMapping(value="/name/{name}")
     public User getByName(@PathVariable String name){
         return this.userService.getByName(name);
     }
 
 
-    @PutMapping(value="/app_users/{id}" , consumes = "application/json")
+    @PutMapping(value="/{id}" , consumes = "application/json")
     public User update(@PathVariable int id,@RequestBody User user){
         return this.userService.update(id, user);
     }
 
-    @DeleteMapping(value="/app_users/{id}")
+    @DeleteMapping(value="/{id}")
     public void delete(@PathVariable int id){
         this.userService.delete(id);
     }
