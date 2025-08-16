@@ -30,7 +30,7 @@ public class ProjectDatabaseApplication {
 			// Add sample departments
 			User dept1 = new User();
 			//dept1.setUser_name("LocalDateTime.now().toString()");
-			dept1.setUserName("kedicikkk");
+			dept1.setUserName("pissi pisi");
 			dept1.setUser_password("kitty");
 			dept1.setUser_password(passwordEncoder.encode(dept1.getUser_password()));
 			dept1.setBirthday(java.sql.Date.valueOf("2024-06-15"));

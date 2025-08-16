@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/app_users")
 @RestController
@@ -28,18 +29,22 @@ public class UserResource {
 
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(
+    public ResponseEntity<Map<String, Object>> login(
             @RequestBody LoginRequest request,
             HttpSession session) { // Add this parameter
-
 
         if (userService.validateLogin(request.username(), request.password())) {
             User user = userRepository.findByUserName(request.username()).get();//I am assumning not nul coming from validate login
 
             session.setAttribute("userId", user.getUser_id()); // Store username instead of ID
-            return ResponseEntity.ok("Login success");
+            return ResponseEntity.ok(Map.of(
+                    "success", true, //this is the boolean key
+                    "userId", user.getUser_id(), // Send user ID to Flutter
+                    "message", "Login successful"
+            ));
         }
-        return ResponseEntity.status(401).body("Invalid credentials");
+        return ResponseEntity.status(401)
+                .body(Map.of("error", "Invalid credentials"));
     }
 
     @PostMapping(value="/register")
