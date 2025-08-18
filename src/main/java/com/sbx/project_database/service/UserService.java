@@ -42,7 +42,7 @@ public class UserService {
         return this.userRepo.findByUserName(id).get(); //get protects form null
     }
 
-    public User add(User user){
+    public User addUser(User user){
         user.setUser_password(passwordEncoder.encode(user.getUser_password())); //hashes the password
         return this.userRepo.save(user);
     }

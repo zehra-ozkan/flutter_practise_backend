@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +18,7 @@ public class UserResource {
     private final UserService userService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
     //managing resting points
     public UserResource(UserService userService, UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userService = userService;
@@ -23,11 +26,11 @@ public class UserResource {
         this.passwordEncoder = passwordEncoder;
     }
 
-
-
     public record LoginRequest(String username, String password) {}
+    public record RegisterRequest(String username, String password, Date date) {}
 
 
+    //this works
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(
             @RequestBody LoginRequest request,
@@ -39,7 +42,9 @@ public class UserResource {
             session.setAttribute("userId", user.getUser_id()); // Store username instead of ID
             return ResponseEntity.ok(Map.of(
                     "success", true, //this is the boolean key
-                    "userId", user.getUser_id(), // Send user ID to Flutter
+                    "userId", user.getUser_id(), // Sending user ID to Flutter
+
+                    "sessionId", session.getId(),
                     "message", "Login successful"
             ));
         }
@@ -48,11 +53,40 @@ public class UserResource {
     }
 
     @PostMapping(value="/register")
-    public ResponseEntity<User> add(@RequestBody User user){ //to remember loggen-in state
-        User s = this.userService.add(user);
-        return ResponseEntity.ok(s);
+    public ResponseEntity<Map<String, Object>> add(
+            @RequestBody RegisterRequest request) { // Add this parameter
+
+        User user = new User(); //todo I need to check dublicates names
+        user.setUserName(request.username);
+        user.setUser_password(request.password);
+        user.setBirthday(request.date);
+        try  {
+           User u = userService.addUser(user);
+            return ResponseEntity.ok(Map.of(
+                    "success" , true,
+                     "userId", user.getUser_id(),
+                     "message", "Register successful"
+            ));
+        }catch (Exception e) {
+            return ResponseEntity.status(401)
+                    .body(Map.of("success" , false,
+                            "userId", -1,
+                            "message", "Register UNsuccessful"));
+        }
     }
 
+    @GetMapping("/current-user")
+    public ResponseEntity<User> getCurrentUser(
+            @RequestHeader("Session-ID") String sessionId, HttpSession session
+    ){
+        if(!session.getId().equals(sessionId)){
+            return ResponseEntity.status(401).build();
+        }
+        int userId = (int) session.getAttribute("userId");
+
+        User user = this.userService.getById(userId);
+        return ResponseEntity.ok(user);
+    }
 
     @GetMapping()
     public List<User> getAll(){
