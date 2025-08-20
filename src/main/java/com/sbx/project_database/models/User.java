@@ -1,8 +1,7 @@
-package com.sbx.project_database.persistence;
+package com.sbx.project_database.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.sql.Date;
 
 @Entity
@@ -16,8 +15,17 @@ public class User {
 
     @Column(name = "user_name", unique = true)
     private String userName;
-
     private String user_password;
     private Date birthday;
 
+    public User(String name){
+        this.userName = name;
+    }
+    public User(){
+
+    }
+    @Override
+    public String toString(){
+        return this.userName + " " + this.user_password + " " + this.birthday;
+    }
 }

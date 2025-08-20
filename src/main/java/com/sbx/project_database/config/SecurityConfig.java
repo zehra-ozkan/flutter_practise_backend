@@ -1,41 +1,55 @@
 package com.sbx.project_database.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 
+
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity //this makes it accept custom configuration
 public class SecurityConfig {
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                // 1. COMPLETELY disable CSRF
-                .csrf(csrf -> csrf.disable())
+        http.csrf(customizer -> customizer.disable())
+            .authorizeHttpRequests(request -> request
+                    .requestMatchers("/app_users/register" , "/app_users/login")
+                    .permitAll()
+                    .anyRequest().authenticated())
+     //         http.formLogin(Customizer.withDefaults()); with this stays in the form wihtout it only popup
+            .httpBasic(Customizer.withDefaults()) //this is for the postman
+            .sessionManagement(session ->
+                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-                // 2. Disable ALL default security filters
-                .securityContext(context -> context.disable())
-                .sessionManagement(session -> session.disable())
-                .requestCache(cache -> cache.disable())
-                .anonymous(anon -> anon.disable())
-                .formLogin(form -> form.disable())
-                .httpBasic(basic -> basic.disable())
-                .logout(logout -> logout.disable())
-
-                // 3. Permit ALL requests
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
-                );
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setPasswordEncoder(new BCryptPasswordEncoder(10));//TODO this is hardcoded!!
+        provider.setUserDetailsService(userDetailsService);
+        return provider;
     }
 }
