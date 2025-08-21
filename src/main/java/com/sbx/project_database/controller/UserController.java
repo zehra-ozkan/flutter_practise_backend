@@ -30,16 +30,20 @@ public class UserController {
         return kk;
     }
 
-    //this works
+    //this doesnt work????
     @PostMapping("/login")
     public String login(@RequestBody User user){
+
         System.out.println(user);
-        return userService.validateLogin(user);
+        System.out.println("mao maon is the best");
+       // return "WhYYYYYYYYYYy";
+      return userService.validateLogin(user);
     }
 
     @PostMapping(value="/register")
     public User register(
             @RequestBody User user) { // Add this parameter
+       // return "Why is this happening?";
         return userService.addUser(user);
     }
 
