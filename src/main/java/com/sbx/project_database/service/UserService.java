@@ -48,8 +48,7 @@ public class UserService {
 
         Authentication authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(user.getUserName(), user.getUser_password()));
-        System.out.println("we come here?");
-        //return authentication.isAuthenticated() ? "what is going on??" : "Noooooo login not successfull";
+
         return authentication.isAuthenticated() ? jwtService.generateToken(user.getUserName()) : "Noooooo login not successfull";
     }
 //    public List<User> getAll(){
