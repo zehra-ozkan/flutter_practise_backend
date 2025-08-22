@@ -10,4 +10,5 @@ public interface UserRepository
         extends JpaRepository<User, Integer> { //Integer is the primary key for the table of users
 
     Optional<User> findByUserName(String userName);
+
 }

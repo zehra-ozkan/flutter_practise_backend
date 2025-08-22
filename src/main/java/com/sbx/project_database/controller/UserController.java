@@ -3,10 +3,12 @@ package com.sbx.project_database.controller;
 import com.sbx.project_database.models.User;
 import com.sbx.project_database.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 @RequestMapping("/app_users")
@@ -32,15 +34,68 @@ public class UserController {
 
     //this works
     @PostMapping("/login")
-    public String login(@RequestBody User user){
-        System.out.println(user);
-        return userService.validateLogin(user);
+    public ResponseEntity<Map<String, Object>> login(@RequestBody User user){
+
+        System.out.println("recieved login request from " + user.getUserName() + user.getUser_password());
+        String result = userService.validateLogin(user); //todo maybe I can send token= null in case of failure
+        System.out.println("login result is = "+ result);
+
+        if(result.equals("failed")){
+            return ResponseEntity.status(401)
+                    .body(Map.of("success", false));
+        }
+        return ResponseEntity.ok(Map.of(
+                "success", true, //this is the boolean key
+                "token", result // Sending user ID to Flutter
+        ));
     }
 
+
+
     @PostMapping(value="/register")
-    public User register(
-            @RequestBody User user) { // Add this parameter
-        return userService.addUser(user);
+    public ResponseEntity<Map<String, Object>> register (@RequestBody User user) {
+        System.out.println("Requesting register for user:" + user.getUserName());
+        System.out.println("Requesting register for user with password :" + user.getUser_password());
+        System.out.println("Requesting register for user with birthday :" + user.getBirthday());
+        try {
+           User h =  userService.addUser(user);
+            System.out.println("User added successfully");
+            return ResponseEntity.ok(Map.of(
+                    "success", true, //this is the boolean key
+                    "message", "yippie" // Sending user ID to Flutter
+            ));
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(401)
+                    .body(Map.of("message", "User already exists", "success", false));
+        }
+
+    }
+    @GetMapping(value="/home")
+    public ResponseEntity<Map<String, Object>> getProfile(@RequestHeader("Authorization") String token) {
+
+        try{
+            System.out.println("\nrequesting home page with token **" + token + "**");
+            System.out.println("Tokens contains whiteSpace : " + token.contains(" "));
+            //token = token.replace(" ", "");
+            User user = userService.getUserByToken(token.substring(7)); //"Bearer plus one whitespace todo do better checking of substring here
+            System.out.println("Accepted token with username " + user.getUserName());
+            return ResponseEntity.ok()
+                    .body(Map.of(
+                            "userName", user.getUserName(),
+                            "birthday", user.getBirthday(),
+
+                            "success", true));
+
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(401)
+                    .body(Map.of(
+                            "message", e.getMessage(),
+                            "success", false));
+
+        }
+
     }
 
 //    @GetMapping()

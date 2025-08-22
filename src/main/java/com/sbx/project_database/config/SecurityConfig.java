@@ -1,5 +1,6 @@
 package com.sbx.project_database.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,9 +39,16 @@ public class SecurityConfig {
      //         http.formLogin(Customizer.withDefaults()); with this stays in the form wihtout it only popup
             .httpBasic(Customizer.withDefaults()) //this is for the postman
 
+//only for debugging
             .sessionManagement(session ->
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            System.out.println("🔐 Blocked endpoint: " + request.getRequestURI());
+                            System.out.println("🔐 Reason: " + authException.getMessage());
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authentication Failed");
+                        }));
         return http.build();
     }
 

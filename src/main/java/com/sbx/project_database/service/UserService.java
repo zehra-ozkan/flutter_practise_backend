@@ -31,55 +31,30 @@ public class UserService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+
     @Autowired
     private JWTService jwtService;
-
-
-
-
-//    public UserService(UserRepository userRepo, PasswordEncoder passwordEncoder, UserRepository userRepository) {
-//        this.userRepo = userRepo;
-//        this.passwordEncoder = passwordEncoder;
-//        this.userRepository = userRepository;
-//    }
-
 
     public String validateLogin(User user) {
 
         Authentication authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(user.getUserName(), user.getUser_password()));
 
-        return authentication.isAuthenticated() ? jwtService.generateToken(user.getUserName()) : "Noooooo login not successfull";
+        return authentication.isAuthenticated() ? jwtService.generateToken(user.getUserName()) : "failed";
     }
-//    public List<User> getAll(){
-//        return this.userRepo.findAll(); //select * from department
-//    }
-//
-//    public User getById(int id){
-//        return this.userRepo.findById(id).get(); //get protects form null
-//    }
-//
-//    public User getByName(String id){
-//        return this.userRepo.findByUserName(id).get(); //get protects form null
-//    }
-//
-    public User addUser(User user){
-      user.setUser_password(encoder.encode(user.getUser_password())); //hashes the password
 
+    public User addUser(User user){
+
+        user.setUser_password(encoder.encode(user.getUser_password())); //hashes the password
         return this.userRepository.save(user);
+
     }
-//
-//    public User update(int id, User user){
-//        Optional<User> optUser = this.userRepo.findById(id);
-//        if(optUser.isPresent()){
-//            optUser.get().setBirthday(user.getBirthday());
-//            optUser.get().setUser_password(passwordEncoder.encode(user.getUser_password())); // hashes the password
-//            optUser.get().setUserName(user.getUserName());
-//            return this.userRepo.save(optUser.get());
-//        }
-//        throw new RuntimeException("User not found");
-//    }
-//    public void delete(int id){
-//        this.userRepo.deleteById(id);
-//    }
+
+    public User getUserByToken(String token) {
+        System.out.println("Inside the getUserby token");
+        String userName = jwtService.extractUserName(token);
+        System.out.println("Userneme is " + userName);
+        return this.userRepository.findByUserName(userName).get();
+    }
+
 }
