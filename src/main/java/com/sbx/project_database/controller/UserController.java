@@ -1,14 +1,18 @@
 package com.sbx.project_database.controller;
 
 import com.sbx.project_database.models.User;
+import com.sbx.project_database.service.UserProfileService;
 import com.sbx.project_database.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Base64;
+
 
 
 @RequestMapping("/app_users")
@@ -17,6 +21,9 @@ public class UserController {
 
     @Autowired
     private  UserService userService;
+
+    @Autowired
+    private UserProfileService userProfileService;
 
     @Autowired
     private AuthenticationManager authManager;
@@ -72,19 +79,27 @@ public class UserController {
 
     }
     @GetMapping(value="/home")
-    public ResponseEntity<Map<String, Object>> getProfile(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<Map<String, Object>> getHomeProfile(@RequestHeader("Authorization") String token) {
 
         try{
             System.out.println("\nrequesting home page with token **" + token + "**");
             System.out.println("Tokens contains whiteSpace : " + token.contains(" "));
             //token = token.replace(" ", "");
             User user = userService.getUserByToken(token.substring(7)); //"Bearer plus one whitespace todo do better checking of substring here
+            byte[] profile = userProfileService.getImageByUserId(user.getUser_id()); //todo this must return null in the nonextistent case
+
+            String base64Image = "";
+            if(profile != null) {
+                 base64Image = Base64.getEncoder().encodeToString(profile);
+            }
+
+           //System.out.println("received the bytes: " + Arrays.toString(profile));
             System.out.println("Accepted token with username " + user.getUserName());
             return ResponseEntity.ok()
                     .body(Map.of(
                             "userName", user.getUserName(),
                             "birthday", user.getBirthday(),
-
+                            "picture", base64Image,
                             "success", true));
 
         }catch (Exception e){

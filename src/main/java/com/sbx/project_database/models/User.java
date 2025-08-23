@@ -18,6 +18,11 @@ public class User {
     private String user_password;
     private Date birthday;
 
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private UserProfile profile;
+
+
     public User(String name){
         this.userName = name;
     }
