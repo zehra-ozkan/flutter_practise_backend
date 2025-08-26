@@ -24,4 +24,19 @@ public class UserProfileService {
         return null;
     }
 
+    public UserProfile addUserProfilePic(UserProfile prof){
+        System.out.println("Comes inside the addd user profile pic in service layer");
+        System.out.println("Profile is null " + (prof == null));
+        System.out.println("user profile id = " + prof.getProfileUserId());
+
+        try {
+            return this.userProfRep.save(prof);
+
+        } catch (Exception e){
+            System.out.println("we are in error!!");
+            System.out.println(e);
+            System.out.println("returning null");
+            return null;
+        }
+    }
 }

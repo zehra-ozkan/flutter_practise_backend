@@ -91,9 +91,10 @@ public class UserController {
             String base64Image = "";
             if(profile != null) {
                  base64Image = Base64.getEncoder().encodeToString(profile);
+            }else {
+                System.out.println("profile is null");
             }
 
-           //System.out.println("received the bytes: " + Arrays.toString(profile));
             System.out.println("Accepted token with username " + user.getUserName());
             return ResponseEntity.ok()
                     .body(Map.of(

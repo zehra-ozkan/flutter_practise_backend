@@ -18,6 +18,7 @@ public class UserProfile {
     private byte[] photo;
 
     @OneToOne
+    @MapsId // CRITICAL: This maps the user's ID to profileUserId
     @JoinColumn(name = "profile_user_id") // Owning side - has the foreign key
     private User user;
 

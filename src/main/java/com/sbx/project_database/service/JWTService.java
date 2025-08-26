@@ -79,7 +79,7 @@ public class JWTService {
         System.out.println("expired: " + expired);
         System.out.println("userName: " + userName + "/////////////// detail userName : " + userDetails.getUsername());
         boolean k = (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
-        System.out.println("\nThe validation results in " + k);
+        System.out.println("The validation results in " + k);
         return k;
     }
     private boolean isTokenExpired(String token) {
