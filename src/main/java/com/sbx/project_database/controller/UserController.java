@@ -25,8 +25,6 @@ public class UserController {
     @Autowired
     private UserProfileService userProfileService;
 
-    @Autowired
-    private AuthenticationManager authManager;
 
     private List<User> kk = new ArrayList<User>();
 
@@ -111,6 +109,44 @@ public class UserController {
                             "success", false));
 
         }
+    }
+    @GetMapping(value="/friends/top") //this will return the name and profile pictures of the top 10 friends
+    public ResponseEntity<Map<String, Object>> getTop10Friends(@RequestHeader("Authorization") String token) {
+        try{
+
+            System.out.println("\nrequesting top 10 friends with token **" + token + "**");
+            User person = userService.getUserByToken(token.substring(7)); //"Bearer plus one whitespace todo do better checking of substring here
+
+
+            System.out.println("Accepted token with username " + person.getUserName());
+
+            ArrayList<Map<String, String>> friendInfo =  userService.getUserTop10Friends(person);
+            System.out.println("ArrayList is null" + friendInfo == null);
+            return ResponseEntity.ok()
+                    .body(Map.of(
+                                "friends", friendInfo,
+                            "success", true,
+                            "count", friendInfo.size())
+                    );
+
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(401)
+                    .body(Map.of(
+                            "friends", null,
+                            "success", false,
+                            "count", -1)
+                    );
+
+        }
+    }
+    @GetMapping(value="/friends/all")
+    public ResponseEntity<Map<String, Object>> getAllFriends(@RequestHeader("Authorization") String token) {
+
+        return ResponseEntity.status(401)
+                .body(Map.of(
+                        "message", "ccc",
+                        "success", false));
 
     }
 
