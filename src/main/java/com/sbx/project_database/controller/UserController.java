@@ -71,13 +71,11 @@ public class UserController {
         }
 
     }
+
     @GetMapping(value="/home")
     public ResponseEntity<Map<String, Object>> getHomeProfile(@RequestHeader("Authorization") String token) {
 
         try{
-            System.out.println("\nrequesting home page with token **" + token + "**");
-            System.out.println("Tokens contains whiteSpace : " + token.contains(" "));
-            //token = token.replace(" ", "");
             User user = userService.getUserByToken(token.substring(7)); //"Bearer plus one whitespace todo do better checking of substring here
             byte[] profile = userProfileService.getImageByUserId(user.getUser_id()); //todo this must return null in the nonextistent case
 
@@ -146,29 +144,6 @@ public class UserController {
 
     }
 
-//    @GetMapping()
-//    public List<User> getAll(){
-//        return this.userService.getAll();
-//    }
-//
-//    @GetMapping(value="/id/{id}")
-//    public User getById(@PathVariable int id){
-//        return this.userService.getById(id);
-//    }
-//    @GetMapping(value="/name/{name}")
-//    public User getByName(@PathVariable String name){
-//        return this.userService.getByName(name);
-//    }
-//
-//
-//    @PutMapping(value="/{id}" , consumes = "application/json")
-//    public User update(@PathVariable int id,@RequestBody User user){
-//        return this.userService.update(id, user);
-//    }
-//
-//    @DeleteMapping(value="/{id}")
-//    public void delete(@PathVariable int id){
-//        this.userService.delete(id);
-//    }
+
 
 }

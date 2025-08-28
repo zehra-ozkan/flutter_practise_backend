@@ -51,7 +51,7 @@ public class JWTService {
     }
 
     public String extractUserName(String token) {
-        System.out.println("Inside the extract User Name");
+        //System.out.println("Inside the extract User Name");
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -71,20 +71,20 @@ public class JWTService {
         final String userName = extractUserName(token);
         boolean expired = isTokenExpired(token);
 
-        System.out.println("Token username: " + userName);
-        System.out.println("UserDetails username: " + userDetails.getUsername());
-        System.out.println("UserDetails class: " + userDetails.getClass().getName());
-        System.out.println("UserDetails toString: " + userDetails.toString());
-
-        System.out.println("expired: " + expired);
-        System.out.println("userName: " + userName + "/////////////// detail userName : " + userDetails.getUsername());
+//        System.out.println("Token username: " + userName);
+//        System.out.println("UserDetails username: " + userDetails.getUsername());
+//        System.out.println("UserDetails class: " + userDetails.getClass().getName());
+//        System.out.println("UserDetails toString: " + userDetails.toString());
+//
+//        System.out.println("expired: " + expired);
+//        System.out.println("userName: " + userName + "/////////////// detail userName : " + userDetails.getUsername());
         boolean k = (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
         System.out.println("The validation results in " + k);
         return k;
     }
     private boolean isTokenExpired(String token) {
         boolean k = extractExpiration(token).before(new Date());
-        System.out.println("The token is expire: = " + k);
+        //System.out.println("The token is expire: = " + k);
         return k;
     }
     private Date extractExpiration(String token) {

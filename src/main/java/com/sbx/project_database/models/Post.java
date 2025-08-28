@@ -35,6 +35,8 @@ public class Post {
     @Column(name = "post_photo", columnDefinition = "VARBINARY(MAX)")
     private byte[] postPhoto;
 
+    private String postText;
+
     private Date postDate;
 
     @Override
