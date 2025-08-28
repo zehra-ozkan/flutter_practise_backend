@@ -5,14 +5,9 @@ import com.sbx.project_database.service.UserProfileService;
 import com.sbx.project_database.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Base64;
 
+import java.util.*;
 
 
 @RequestMapping("/app_users")
@@ -119,6 +114,7 @@ public class UserController {
 
 
             System.out.println("Accepted token with username " + person.getUserName());
+
 
             ArrayList<Map<String, String>> friendInfo =  userService.getUserTop10Friends(person);
             System.out.println("ArrayList is null" + friendInfo == null);

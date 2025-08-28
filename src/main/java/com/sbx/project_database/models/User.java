@@ -42,6 +42,15 @@ public class User {
     @ToString.Exclude
     private Set<User> friends = new HashSet<>();
 
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "postUser")
+    @JsonIgnore  // ← Prevents JSON serialization of this field
+    @ToString.Exclude
+    private Set<Post> posts = new HashSet<>();
+
+
+
+
     public User(String name){
         this.userName = name;
     }
