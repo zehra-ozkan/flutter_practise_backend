@@ -16,6 +16,9 @@ public class PostService {
     @Autowired
     private PostRepository postRepository;
 
+    @Autowired
+    private UserService userService;
+
     public Set<Map<String, Object>> getUserPosts(User user) {//todo custom json for post!!
         try {
             Set<Post> posts = user.getPosts();
@@ -28,14 +31,29 @@ public class PostService {
                 userPost.put("postPhoto", Base64.getEncoder().encodeToString(post.getPostPhoto()));
                 userPosts.add(userPost);
             }
-
             return userPosts;
         }catch (Exception e){
             System.out.println("Error in getUserPosts");
             e.printStackTrace();
             return null;
         }
+    }
+    public Set<Map<String, Object>> getUserFriendPosts(User user) {
+        try {
 
+            Set<User> friends = user.getFriends();
+            Set<Map<String, Object>> userPosts = new HashSet<>();
+            for (User u : friends) {
+                Set<Map<String, Object>> userPost = new HashSet<>();
+                userPost = this.getUserPosts(u);
+                userPosts.addAll(userPost);
+            }
+            return userPosts;
+        }catch (Exception e){
+            System.out.println("Error in getUserPosts");
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public Post addPost(Post post) {

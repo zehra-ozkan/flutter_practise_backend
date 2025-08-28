@@ -49,6 +49,26 @@ public class PostController {
                      .body(Map.of("message", "olmadı", "success", false));
          }
      }
+     @GetMapping("/friend_posts")
+    public ResponseEntity<Map<String, Object>> getFriendPosts(@RequestHeader("Authorization") String token) {
+         User user = userService.getUserByToken(token.substring(7));
+
+         System.out.println("Requesting posts of " + user.getUserName());
+         System.out.println("");
+         try {
+             Set<Map<String, Object>> posts = postService.getUserFriendPosts(user);
+             return ResponseEntity.ok()
+                     .body(Map.of(
+                             "posts", posts,
+                             "success", true,
+                             "count", posts.size())
+                     );
+         }catch (Exception e) {
+             System.out.println(e);
+             return ResponseEntity.status(401)
+                     .body(Map.of("message", "olmadı", "success", false));
+         }
+     }
 
      @PostMapping(value="/new_post")
     public ResponseEntity<Map<String, Object>> addNewPost(@RequestHeader("Authorization") String token,
