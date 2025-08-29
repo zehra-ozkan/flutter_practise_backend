@@ -96,9 +96,16 @@ public class UserService {
 
     public User addUserFriend(User person, User requestedFriend) {
         Set<User> set;
-        set = person.getFriends();
-        set.add(requestedFriend);
-        person.setFriends(set);
+        //set = person.getFriends();
+        person.getFriends().add(requestedFriend);
+        System.out.println("before adding friend count = " + person.getFriends().size());
+
+        //set.add(requestedFriend);
+        //person.setFriends(set);
+        System.out.println("after adding friend count = " + person.getFriends().size());
+
+
+        this.userRepository.save(person);
 
         return person;
     }
