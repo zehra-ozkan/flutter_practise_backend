@@ -52,6 +52,9 @@ public class UserService {
         return this.userRepository.save(user);
 
     }
+    public User getUserById(int id){
+        return this.userRepository.findById(id).get();
+    }
 
     public User getUserByToken(String token) {
         //System.out.println("Inside the getUserby token");
@@ -89,6 +92,15 @@ public class UserService {
             if(count == 10) break;
         }
         return friends;
+    }
+
+    public User addUserFriend(User person, User requestedFriend) {
+        Set<User> set;
+        set = person.getFriends();
+        set.add(requestedFriend);
+        person.setFriends(set);
+
+        return person;
     }
 //    public ArrayList<Map<String, Object>> getUserTop10Friends(User person) {
 //        Set<User> set;

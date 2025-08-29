@@ -89,6 +89,7 @@ public class UserController {
             System.out.println("Accepted token with username " + user.getUserName());
             return ResponseEntity.ok()
                     .body(Map.of(
+                            "userId", user.getUser_id(),
                             "userName", user.getUserName(),
                             "birthday", user.getBirthday(),
                             "picture", base64Image,
@@ -121,6 +122,38 @@ public class UserController {
                                 "friends", friendInfo,
                             "success", true,
                             "count", friendInfo.size())
+                    );
+
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(401)
+                    .body(Map.of(
+                            "friends", null,
+                            "success", false,
+                            "count", -1)
+                    );
+
+        }
+    }
+
+    @PostMapping(value="/friends/add")
+    public ResponseEntity<Map<String, Object>> addFriends(@RequestHeader("Authorization") String token, @RequestBody Map<String, Object> requestBody) {
+        try{
+
+            System.out.println("\nrequesting top 10 friends with token **" + token + "**");
+            User person = userService.getUserByToken(token.substring(7)); //"Bearer plus one whitespace todo do better checking of substring here
+
+            User requestedFriend = userService.getUserById((Integer) requestBody.get("userId"));
+
+            User result = userService.addUserFriend(person, requestedFriend);
+            System.out.println("Accepted token with username " + person.getUserName());
+
+
+            return ResponseEntity.ok()
+                    .body(Map.of(
+                            "name", result.getUserName(),
+                            "success", true,
+                            "profile" , result.getProfile().getPhoto())
                     );
 
         }catch (Exception e){
