@@ -4,6 +4,7 @@ import com.sbx.project_database.models.User;
 import com.sbx.project_database.service.UserProfileService;
 import com.sbx.project_database.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -136,17 +137,19 @@ public class UserController {
         }
     }
 
-    @PostMapping(value="/friends/add")
+    @PostMapping(value="/friends/add" , consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> addFriends(@RequestHeader("Authorization") String token, @RequestBody Map<String, Object> requestBody) {
         try{
 
             System.out.println("\nrequesting top 10 friends with token **" + token + "**");
-            User person = userService.getUserByToken(token.substring(7)); //"Bearer plus one whitespace todo do better checking of substring here
+            User person = userService.getUserByToken(token.substring(7)); // this is who I am
+            int reqId = (Integer) requestBody.get("userId");
 
-            User requestedFriend = userService.getUserById((Integer) requestBody.get("userId"));
+            System.out.println("Request id is " + reqId);
+            User requestedFriend = userService.getUserById(reqId);
 
             User result = userService.addUserFriend(person, requestedFriend);
-            System.out.println("Accepted token with username " + person.getUserName());
+            System.out.println("before returning friend count = " + person.getFriends().size());
 
 
             return ResponseEntity.ok()
@@ -157,6 +160,7 @@ public class UserController {
                     );
 
         }catch (Exception e){
+            System.out.println("We are in error " + e);
             System.out.println(e.getMessage());
             return ResponseEntity.status(401)
                     .body(Map.of(
