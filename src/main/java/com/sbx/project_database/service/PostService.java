@@ -19,16 +19,25 @@ public class PostService {
     @Autowired
     private UserService userService;
 
-    public Set<Map<String, Object>> getUserPosts(User user) {//todo custom json for post!!
+    public List<Map<String, Object>> getUserPosts(User user) {//todo custom json for post!!
         try {
-            Set<Post> posts = user.getPosts();
-            Set<Map<String, Object>> userPosts = new HashSet<>();
+            List<Post> posts = user.getPosts();
+            List<Map<String, Object>> userPosts = new ArrayList<>();
+            posts.sort(Comparator.comparing(Post::getPostDate).reversed());
+
+
             for (Post post : posts) {
                 Map<String, Object> userPost = new HashMap<>();
                 userPost.put("postUserName", user.getUserName());
                 userPost.put("postText", post.getPostText());
                 userPost.put("postDate", post.getPostDate());
                 userPost.put("postPhoto", Base64.getEncoder().encodeToString(post.getPostPhoto()));
+
+                if(user.getProfile() != null){
+                    userPost.put("postUserPhoto", Base64.getEncoder().encodeToString(user.getProfile().getPhoto()));
+                }else{
+                    userPost.put("postUserPhoto", "");
+                }
                 userPosts.add(userPost);
             }
             return userPosts;
@@ -38,13 +47,13 @@ public class PostService {
             return null;
         }
     }
-    public Set<Map<String, Object>> getUserFriendPosts(User user) {
+    public List<Map<String, Object>> getUserFriendPosts(User user) {
         try {
 
             Set<User> friends = user.getFriends();
-            Set<Map<String, Object>> userPosts = new HashSet<>();
+            List<Map<String, Object>> userPosts = new ArrayList<>();
             for (User u : friends) {
-                Set<Map<String, Object>> userPost = new HashSet<>();
+                List<Map<String, Object>> userPost = new ArrayList<>();
                 userPost = this.getUserPosts(u);
                 userPosts.addAll(userPost);
             }

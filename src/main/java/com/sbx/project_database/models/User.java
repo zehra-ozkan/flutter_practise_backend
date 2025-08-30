@@ -5,9 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Getter
@@ -46,8 +44,7 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "postUser")
     @JsonIgnore  // ← Prevents JSON serialization of this field
     @ToString.Exclude
-    private Set<Post> posts = new HashSet<>();
-
+    private List<Post> posts = new ArrayList<>() ;
 
 
 

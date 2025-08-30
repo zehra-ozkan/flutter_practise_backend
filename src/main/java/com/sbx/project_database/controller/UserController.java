@@ -70,7 +70,6 @@ public class UserController {
             return ResponseEntity.status(401)
                     .body(Map.of("message", "User already exists", "success", false));
         }
-
     }
 
     @GetMapping(value="/home")

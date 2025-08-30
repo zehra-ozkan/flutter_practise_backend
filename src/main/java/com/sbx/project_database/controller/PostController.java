@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @RequestMapping("/posts")
 @RestController
@@ -29,6 +26,7 @@ public class PostController {
     private PostService postService;
 
 
+
      @GetMapping("/my_posts")
     public ResponseEntity<Map<String, Object>> getMyPosts(@RequestHeader("Authorization") String token) {
          User user = userService.getUserByToken(token.substring(7));
@@ -36,7 +34,7 @@ public class PostController {
          System.out.println("Requesting posts of " + user.getUserName());
          System.out.println("");
          try {
-             Set<Map<String, Object>> posts = postService.getUserPosts(user);
+             List<Map<String, Object>> posts = postService.getUserPosts(user);
              return ResponseEntity.ok()
                      .body(Map.of(
                              "posts", posts,
@@ -56,7 +54,7 @@ public class PostController {
          System.out.println("Requesting posts of " + user.getUserName());
          System.out.println("");
          try {
-             Set<Map<String, Object>> posts = postService.getUserFriendPosts(user);
+             List<Map<String, Object>> posts = postService.getUserFriendPosts(user);
              return ResponseEntity.ok()
                      .body(Map.of(
                              "posts", posts,
@@ -70,6 +68,7 @@ public class PostController {
          }
      }
 
+
      @PostMapping(value="/new_post")
     public ResponseEntity<Map<String, Object>> addNewPost(@RequestHeader("Authorization") String token,
                                                           @RequestParam("postText") String content,
@@ -81,9 +80,10 @@ public class PostController {
          post.setPostPhoto(photoFile.getBytes());
          post.setPostText(content);
          post.setPostUser(user);
-         Date utilDate = new Date();
-         post.setPostDate(new java.sql.Date(utilDate.getTime()));
+//         Date utilDate = new Date();
+//         post.setPostDate(new java.sql.Date(utilDate.getTime()));
 
+         post.setPostDate(java.time.LocalDateTime.now());
          System.out.println("");
          try {
              postService.addPost(post);

@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -37,7 +38,7 @@ public class Post {
 
     private String postText;
 
-    private Date postDate;
+    private LocalDateTime postDate;
 
     @Override
     public boolean equals(Object o) {
