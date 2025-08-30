@@ -57,6 +57,8 @@ public class PostService {
                 userPost = this.getUserPosts(u);
                 userPosts.addAll(userPost);
             }
+            //userPosts.sort(Comparator.comparing(Ma).reversed());
+
             return userPosts;
         }catch (Exception e){
             System.out.println("Error in getUserPosts");
