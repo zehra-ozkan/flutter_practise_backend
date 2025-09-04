@@ -1,0 +1,12 @@
+{
+  "name": "my-springboot-backend",
+  "version": "1.0.0",
+  "description": "Forces Render to use Docker",
+  "scripts": {
+    "build": "docker build -t my-app .",
+    "start": "docker run -p 8080:8080 my-app"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
