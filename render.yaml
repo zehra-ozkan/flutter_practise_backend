@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: my-springboot-backend
+    env: java
+    plan: free
+    buildCommand: ./mvnw clean package -DskipTests
+    startCommand: java -jar target/*.jar
+    runtime: static
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
