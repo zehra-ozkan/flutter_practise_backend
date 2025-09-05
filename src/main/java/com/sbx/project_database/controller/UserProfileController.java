@@ -15,6 +15,7 @@ import java.util.Map;
 
 @RequestMapping(value="/user_profiles")
 @RestController
+@CrossOrigin
 public class UserProfileController {
 
     @Autowired

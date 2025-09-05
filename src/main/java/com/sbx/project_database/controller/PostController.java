@@ -17,6 +17,7 @@ import java.util.*;
 
 @RequestMapping("/posts")
 @RestController
+@CrossOrigin
 public class PostController {
 
     @Autowired
