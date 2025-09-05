@@ -15,7 +15,6 @@ target/
 
 ##for my own protection
 
-*.properties
 *.env
 ### IntelliJ IDEA ###
 .idea
