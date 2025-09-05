@@ -33,7 +33,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(customizer -> customizer.disable())
             .authorizeHttpRequests(request -> request
-                    .requestMatchers("/app_users/register" , "/app_users/login")
+                    .requestMatchers("/app_users/register" , "/app_users/login" , "/")
                     .permitAll()
                     .anyRequest().authenticated())
      //         http.formLogin(Customizer.withDefaults()); with this stays in the form wihtout it only popup

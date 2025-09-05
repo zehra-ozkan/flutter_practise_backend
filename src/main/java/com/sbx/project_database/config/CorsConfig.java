@@ -35,10 +35,9 @@ public class CorsConfig { //without cors configuration it doesnt run on chrome
         config.addAllowedOrigin("http://localhost:3000"); // Flutter web
         config.addAllowedOrigin("http://localhost:5555"); // Flutter web debug
         config.addAllowedOrigin("http://localhost:61124"); // Flutter desktop
-
-
         config.addAllowedOrigin("http://localhost");
         config.addAllowedOrigin("http://127.0.0.1");
+
         config.addAllowedOriginPattern("*"); // For mobile apps
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
