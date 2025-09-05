@@ -12,15 +12,13 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
-public class CorsConfig { //without cors configuration it doesnt run on chrome
+public class CorsConfig {
 
     @Value("${CORS_ALLOWED_ORIGIN:http://localhost:8080}") // Default to localhost for development
     private String allowedOrigin;
 
     @Bean
     public CorsFilter corsFilter() {
-
-        // Inject the allowed origin from an environment variable
 
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -31,18 +29,7 @@ public class CorsConfig { //without cors configuration it doesnt run on chrome
         config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
-        config.addAllowedOrigin("http://localhost:8080"); // For web
-        config.addAllowedOrigin("http://127.0.0.1:3000");
-        config.addAllowedOrigin("http://192.168.1.10:8080");
-        config.addAllowedOrigin("http://localhost:3000"); // Flutter web
-        config.addAllowedOrigin("http://localhost:5555"); // Flutter web debug
-        config.addAllowedOrigin("http://localhost:61124"); // Flutter desktop
-        config.addAllowedOrigin("http://localhost");
-        config.addAllowedOrigin("http://127.0.0.1");
 
-        config.addAllowedOriginPattern("*"); // For mobile apps
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
 
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
