@@ -1,5 +1,7 @@
 FROM maven:3.8.3-openjdk-17 AS build
-COPY . ./
+
+COPY pom.xml .
+COPY src ./src
 WORKDIR /app
 RUN mvn clean package -DskipTests
 
