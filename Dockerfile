@@ -5,7 +5,6 @@ COPY . .
 RUN echo "Contents of /app:" && ls -la
 RUN echo "Current directory:" && pwd
 RUN echo "Looking for pom.xml:" && find . -name "pom.xml" -type f
-WORKDIR /app/project-database
 RUN mvn clean package -DskipTests
 
 FROM openjdk:22-jdk-slim-buster
