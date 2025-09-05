@@ -1,4 +1,4 @@
-FROM maven:3.8.3-openjdk-22 AS build
+FROM maven:3.8.8-openjdk-22 AS build
 
 WORKDIR /app
 COPY . .
