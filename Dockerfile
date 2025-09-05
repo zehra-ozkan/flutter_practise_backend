@@ -1,6 +1,6 @@
 FROM maven:3.8.3-openjdk-17 AS build
 COPY . .
-WORKDIR /app
+WORKDIR /project-database
 RUN mvn clean package -DskipTests
 
 FROM openjdk:22-jdk-slim-buster
