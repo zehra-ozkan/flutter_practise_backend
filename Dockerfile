@@ -1,7 +1,10 @@
 FROM maven:3.8.3-openjdk-17 AS build
 
-COPY pom.xml .
-COPY src ./src
+# Copy everything and see what's actually there
+COPY . .
+RUN echo "Contents of /app:" && ls -la
+RUN echo "Current directory:" && pwd
+RUN echo "Looking for pom.xml:" && find . -name "pom.xml" -type f
 WORKDIR /app
 RUN mvn clean package -DskipTests
 
