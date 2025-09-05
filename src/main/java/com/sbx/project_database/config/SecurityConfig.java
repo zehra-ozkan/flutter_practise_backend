@@ -41,7 +41,6 @@ public class SecurityConfig {
                     .requestMatchers("/app_users/register" , "/app_users/login" , "/")
                     .permitAll()
                     .anyRequest().authenticated())
-     //         http.formLogin(Customizer.withDefaults()); with this stays in the form wihtout it only popup
             .httpBasic(Customizer.withDefaults()) //this is for the postman
 
 //only for debugging
