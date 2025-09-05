@@ -8,6 +8,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -27,11 +28,12 @@ public class CorsConfig { //without cors configuration it doesnt run on chrome
 
         config.setAllowCredentials(true);
         config.setAllowedOriginPatterns(List.of(allowedOrigin));
+        config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 
         config.addAllowedOrigin("http://localhost:8080"); // For web
         config.addAllowedOrigin("http://127.0.0.1:3000");
         config.addAllowedOrigin("http://192.168.1.10:8080");
-
         config.addAllowedOrigin("http://localhost:3000"); // Flutter web
         config.addAllowedOrigin("http://localhost:5555"); // Flutter web debug
         config.addAllowedOrigin("http://localhost:61124"); // Flutter desktop
